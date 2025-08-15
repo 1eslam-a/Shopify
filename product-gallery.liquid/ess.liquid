@@ -1,0 +1,54 @@
+{{ 'pro.css' | asset_url | stylesheet_tag }}
+{{ 'pro.js' | asset_url | script_tag }}
+<section class="gallery">
+  {% for product in collections.all.products %}
+    <div class="product-card"
+      data-name="{{ product.title }}"
+      data-price="{{ product.price | money }}"
+      data-description="{{ product.description | strip_html }}"
+      data-image="{{ product.featured_image | img_url: 'large' }}">
+      
+      <img src="{{ product.featured_image | img_url: '400x400' }}" alt="{{ product.title }}">
+      <div class="plus">+</div>
+    </div>
+  {% endfor %}
+</section>
+
+<div class="modal" id="product-modal">
+  <div class="modal-content">
+    <span class="close" id="modal-close">&times;</span>
+    <img src="" alt="" id="modal-image" />
+    <h3 id="modal-name"></h3>
+    <p id="modal-price"></p>
+    <p id="modal-description"></p>
+
+    <div class="option-group">
+      <label>Color</label>
+      <div id="modal-colors">
+        {% for option in product.options_with_values %}
+          {% if option.name == "Color" %}
+            {% for value in option.values %}
+              <div class="color-option" data-color="{{ value }}">{{ value }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="option-group">
+      <label>Size</label>
+      <select id="modal-sizes">
+        <option value="">Choose your size</option>
+        {% for size in product.options_with_values %}
+          {% if size.name == "Size" %}
+            {% for value in size.values %}
+              <option value="{{ value }}">{{ value }}</option>
+            {% endfor %}
+          {% endif %}
+        {% endfor %}
+      </select>
+    </div>
+
+    <button class="add-to-cart-btn">Add to Cart</button>
+  </div>
+</div>
